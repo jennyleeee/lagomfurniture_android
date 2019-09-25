@@ -1,8 +1,10 @@
-package com.example.lagomfurniture;
+package com.example.lagomfurniture.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.lagomfurniture.R;
 
 public class MainActivity extends AppCompatActivity {
 
