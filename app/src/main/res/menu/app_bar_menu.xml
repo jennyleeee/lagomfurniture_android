@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <item
+        android:id="@+id/shopping_basket"
+        android:title="shopping_basket"
+        android:icon="@drawable/icon_shoppingbag"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/drawer_open"
+        android:title="Open"
+        android:icon="@drawable/icon_menu"
+        app:showAsAction="always"/>
+
+    <!--showAsAction 속성은 메뉴 버튼이 어떻게 보일지 설정하는 것이다.-->
+    <!--always : 항상 툴바의 액션으로 보이게 표시-->
+    <!--never : 항상 오버플로우 메뉴에 포함되게 표시-->
+    <!--ifRoom : 만약 공간이 있다면 액션, 없다면 오버플로우 메뉴에 표시-->
+    <!--withText : 툴바의 액션으로 표시할 때 공간이 있을 경우-->
+               <!--item title과 같이 표시-->
+
+</menu>
