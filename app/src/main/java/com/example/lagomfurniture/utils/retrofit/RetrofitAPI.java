@@ -14,11 +14,14 @@ import retrofit2.http.Query;
 
 public interface RetrofitAPI {
 
+
     @FormUrlEncoded
     @POST("/users/android_register")
     Call<User> Register(@Field("userEmail") String userEmail,
                         @Field("password") String password,
-                        @Field("nickname") String nickname);
+                        @Field("nickname") String nickname,
+                        @Field("platform") String platform,
+                        @Field("profileImage") String profileImage);
 
     @FormUrlEncoded
     @POST("/users/android_login")

@@ -6,10 +6,10 @@ public class User {
     @SerializedName("response")
     private String response;
 
-    @SerializedName("user_id")
+    @SerializedName("id")
     private int id;
 
-    @SerializedName("user_email")
+    @SerializedName("userEmail")
     private String userEmail;
 
     private String password;
@@ -20,7 +20,7 @@ public class User {
     @SerializedName("nickname")
     private String nickname;
 
-    @SerializedName("profile_image")
+    @SerializedName("profileImage")
     private String profileImage;
 
     @SerializedName("resultcode")
@@ -41,6 +41,14 @@ public class User {
         this.userEmail = userEmail;
         this.password = password;
         this.nickname = nickname;
+    }
+
+    public User(String userEmail, String password, String platform, String nickname, String profileImage) {
+        this.userEmail = userEmail;
+        this.password = password;
+        this.platform = platform;
+        this.nickname = nickname;
+        this.profileImage = profileImage;
     }
 
     public String getResponse() {
