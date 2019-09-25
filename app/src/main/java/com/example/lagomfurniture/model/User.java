@@ -9,7 +9,7 @@ public class User {
     @SerializedName("id")
     private int id;
 
-    @SerializedName("userEmail")
+    @SerializedName("user_email")
     private String userEmail;
 
     private String password;
@@ -20,7 +20,7 @@ public class User {
     @SerializedName("nickname")
     private String nickname;
 
-    @SerializedName("profileImage")
+    @SerializedName("profile_Image")
     private String profileImage;
 
     @SerializedName("resultcode")

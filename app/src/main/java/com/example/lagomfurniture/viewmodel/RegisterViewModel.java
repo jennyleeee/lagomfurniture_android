@@ -58,6 +58,8 @@ public class RegisterViewModel extends ViewModel {
 
 
     private void setUserData() {
+        // 리팩토링 실패 : 레퍼지토리에서 레트로핏 통신을 하려고하면 레트로핏 API 통신은 비동기 처리인데,
+        // 메소드가 동기 처리를 하여 MutableLiveData<User> 반환이 안됨. 나중에 코틀린, MVVM 공부할 시에 다시 공부
         String host = RetrofitInit.BASE_URL;
         String path = "/static/reviewimage/";
         String PROFILE_IMAGE = host + path + DEFAULT_PROFILE_IMAGE;

@@ -2,13 +2,16 @@ package com.example.lagomfurniture.viewmodel;
 
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.lagomfurniture.model.User;
+import com.example.lagomfurniture.utils.LoginCallbacks;
 import com.example.lagomfurniture.utils.retrofit.RetrofitAPI;
 import com.example.lagomfurniture.utils.retrofit.RetrofitInit;
 
@@ -25,8 +28,10 @@ public class LoginViewModel extends ViewModel {
     public MutableLiveData<String> password = new MutableLiveData<>();
     private MutableLiveData<User> userMutableLiveData;
     private MutableLiveData<Integer> loginLoading;
+    private LoginCallbacks loginCallbacks;
 
-    public LoginViewModel() {
+    public LoginViewModel(LoginCallbacks loginCallbacks) {
+        this.loginCallbacks = loginCallbacks;
     }
 
     public MutableLiveData<Integer> getLoginLoading() {
@@ -49,6 +54,7 @@ public class LoginViewModel extends ViewModel {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                onLoginStateMessage();
                 loginLoading.setValue(8);
                 getUserData();
             }
@@ -69,7 +75,7 @@ public class LoginViewModel extends ViewModel {
                     userMutableLiveData.setValue(response.body());
                 }
                 if (response.body().getResponse().equals("failed")) {
-                    //loginCallbacks.onLoginFailure("이메일 및 비밀번호를 확인해 주세요."); 이부분 예외처리 아직 안함
+                    loginCallbacks.onLoginFailure("이메일 및 비밀번호를 확인해 주세요.");
                 }
             }
             @Override
@@ -79,4 +85,34 @@ public class LoginViewModel extends ViewModel {
         });
     }
 
+    private int isValid() {
+        if (TextUtils.isEmpty(userEmail.getValue())) {
+            return 0;
+        } else if (TextUtils.isEmpty(password.getValue())) {
+            return 1;
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(userEmail.getValue()).matches()) {
+            return 2;
+        } else if (password.getValue().length() < 6) {
+            return 3;
+        } else {
+            return -1;
+        }
+    }
+
+    private void onLoginStateMessage() {
+        int errorCode = isValid();
+
+        if (errorCode == 0) {
+            loginCallbacks.onLoginFailure("이메일을 입력해 주세요.");
+        }
+        if (errorCode == 1) {
+            loginCallbacks.onLoginFailure("비밀번호를 입력해 주세요.");
+        }
+        if (errorCode == 2) {
+            loginCallbacks.onLoginFailure("이메일 형식이 맞지 않습니다. 다시 한 번 확인해 주세요.");
+        }
+        if (errorCode == 3) {
+            loginCallbacks.onLoginFailure("비밀번호를 6자 이상 입력해 주세요.");
+        }
+    }
 }
