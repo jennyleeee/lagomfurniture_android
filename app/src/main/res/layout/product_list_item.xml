@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <data>
+        <variable
+            name="product"
+            type="com.example.lagomfurniture.model.Product" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp">
+        <ImageView
+            android:id="@+id/imageview_productThumbnail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:productThumbnail="@{product.productThumbnail}"/>
+
+        <TextView
+            android:id="@+id/textview_productName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="productName"
+            android:text="@{product.productName}"
+            android:textColor="@color/colorBlack"
+            android:textSize="15dp"
+            app:layout_constraintEnd_toEndOf="@+id/imageview_productThumbnail"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/imageview_productThumbnail"
+            app:layout_constraintTop_toBottomOf="@+id/imageview_productThumbnail" />
+
+        <TextView
+            android:id="@+id/textview_productPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="productPrice"
+            android:text="@{product.productPrice + ` Won`}"
+            android:textColor="@color/colorBlack"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/textview_productName"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/textview_productName"
+            app:layout_constraintTop_toBottomOf="@+id/textview_productName" />
+    </LinearLayout>
+</layout>

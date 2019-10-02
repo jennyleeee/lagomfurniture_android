@@ -29,5 +29,5 @@ public interface RetrofitAPI {
                           @Field("password") String password);
 
     @GET("/product/category_android")
-    Call<List<Product>> getCategory(@Query("category") String category);
+    Call<List<Product>> getProductList (@Query("category") String category);
 }

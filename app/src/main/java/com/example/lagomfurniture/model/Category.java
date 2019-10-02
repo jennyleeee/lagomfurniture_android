@@ -24,6 +24,18 @@ public class Category {
         return itemViewType;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setImage(int image) {
+        this.image = image;
+    }
+
+    public void setItemViewType(int itemViewType) {
+        this.itemViewType = itemViewType;
+    }
+
     @Override
     public String toString() {
         return "Category{" + "title='" + title + '\'' + ", image=" + image + ", itemViewType=" + itemViewType + '}';

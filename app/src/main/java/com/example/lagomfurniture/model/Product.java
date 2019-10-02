@@ -9,6 +9,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.lagomfurniture.R;
 import com.google.gson.annotations.SerializedName;
 
+
 public class Product {
 
     @SerializedName("productId")
@@ -26,14 +27,51 @@ public class Product {
     @SerializedName("productThumnail")
     private String productThumbnail;
 
+    public int getProductId() {
+        return productId;
+    }
+
+    public String getProductCategory() {
+        return productCategory;
+    }
+
+    public String getProductExplained1() {
+        return productExplained1;
+    }
+
+    public String getProductExplained2() {
+        return productExplained2;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public String getProductPrice() {
+        return productPrice;
+    }
+
+    public String getProductThumbnail() {
+//        String host = "http://172.30.1.23:8080";
+        String host = "http://10.66.112.34:8080";
+        String path = "/static/img/product/";
+        String category = getProductCategory();
+        productThumbnail = host + path + category + "/" + productThumbnail;
+        return productThumbnail;
+    }
+
     @BindingAdapter({"productThumbnail"})
     public static void loadProductImage(ImageView imageView, String imageURL) {
         Glide.with(imageView.getContext())
                 .setDefaultRequestOptions(new RequestOptions()
-                        .override(500,500))  // 기본 옵션 세팅. 모든 이미지 로드에 값 적용
+                        .override(500, 500))  // 기본 옵션 세팅. 모든 이미지 로드에 값 적용
                 .load(imageURL)
                 .placeholder(R.color.colorGray)
                 .into(imageView);
     }
 
+    @Override
+    public String toString() {
+        return "Product{" + "productId=" + productId + ", productCategory='" + productCategory + '\'' + ", productExplained1='" + productExplained1 + '\'' + ", productExplained2='" + productExplained2 + '\'' + ", productName='" + productName + '\'' + ", productPrice='" + productPrice + '\'' + ", productThumbnail='" + productThumbnail + '\'' + '}';
+    }
 }
