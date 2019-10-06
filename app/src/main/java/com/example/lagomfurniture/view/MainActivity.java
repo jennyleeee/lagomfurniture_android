@@ -35,16 +35,14 @@ import com.example.lagomfurniture.viewmodel.ProductViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnItemClickListener {
+public class MainActivity extends BaseActivity implements OnItemClickListener {
     private static final String TAG = "메인";
     private static final int SELECT_ON_VIEW = 2;
     private static final int SELECT_OFF_VIEW = 1;
-    private DrawerLayout drawerLayout;
     private RecyclerView recyclerview_category;
     private TextView productSizeText;
-    private TextView textView_userEmail;
-    private TextView textView_userNickname;
     private TextView logout;
+    private TextView review;
     private ProductViewModel productViewModel;
     private ProductListRcAdapter productListRcAdapter;
     private MainCategoryRcAdapter mainCategoryRcAdapter;
@@ -58,9 +56,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         viewInit();
         categoryRecyclerViewSetting();
 
-        getUserInfo();
         logout(logout);
-
+        review(review);
 
         // bind RecyclerView
         RecyclerView recyclerView = activityMainBinding.recyclerviewProduct;
@@ -77,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         categoryState(SELECT_ON_VIEW, SELECT_OFF_VIEW, SELECT_OFF_VIEW, SELECT_OFF_VIEW, SELECT_OFF_VIEW);
     }
 
-
     private void getProductList(String category) {  // 상품 리스트 서버에서 가져오기
         productViewModel.getProduct(category).observe(this, new Observer<List<Product>>() {
             @Override
@@ -90,12 +86,10 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
     private void viewInit() {   // 뷰 초기화
         Toolbar toolbar = findViewById(R.id.toolBar);
-        drawerLayout = findViewById(R.id.drawerlayout);
         recyclerview_category = findViewById(R.id.recyclerview_category);
         productSizeText = findViewById(R.id.productSize);
-        textView_userEmail = findViewById(R.id.textviewUserEmail);
-        textView_userNickname = findViewById(R.id.textviewUserNickname);
         logout = findViewById(R.id.drawer_logout);
+        review = findViewById(R.id.Review);
 
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -130,42 +124,6 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         items.set(4, new Category(Category.Lamp, R.drawable.icon_lamp, LampState));
     }
 
-
-    private void getUserInfo() {    // 유저 이메일, 닉네임 가져오기
-        Intent intent = getIntent();
-        String userEmail = intent.getStringExtra("user_email");
-        String userNickname = intent.getStringExtra("nickname");
-        if (userEmail == null && userNickname == null) {
-            SharedPreferencesUtils sharedPreferencesUtils = new SharedPreferencesUtils(MainActivity.this);
-            userEmail = sharedPreferencesUtils.getStringSharedPreferences("user_email");
-            userNickname = sharedPreferencesUtils.getStringSharedPreferences("nickname");
-        }
-        textView_userEmail.setText(userEmail);
-        textView_userNickname.setText(userNickname);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) { // Toolbar Menu
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.app_bar_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {   // Toolbar Menu
-        switch (item.getItemId()) {
-            case R.id.shopping_basket:
-                Toast.makeText(this, "장바구니 클릭", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.drawer_open:
-                Toast.makeText(this, "세팅 버튼 클릭", Toast.LENGTH_SHORT).show();
-                drawerLayout.openDrawer(GravityCompat.END);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     //종료 애니메이션 없애는 메소드
     @Override
     public void finish() {
@@ -173,13 +131,23 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         overridePendingTransition(0, 0);
     }
 
-    private void logout(View view) {
+    private void logout(View view) {    // 로그아웃 기능
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SharedPreferencesUtils sharedPreferencesUtils = new SharedPreferencesUtils(MainActivity.this);
                 sharedPreferencesUtils.clearSharedPreferences();
                 finish();
+            }
+        });
+    }
+
+    private void review(View view) {    // 리뷰페이지 이동
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, ReviewActivity.class);
+                startActivity(intent);
             }
         });
     }
