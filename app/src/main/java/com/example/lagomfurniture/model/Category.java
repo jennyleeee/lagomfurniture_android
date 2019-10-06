@@ -1,6 +1,12 @@
 package com.example.lagomfurniture.model;
 
 public class Category {
+    public static final String Bed = "Bed";
+    public static final String Chest = "Chest";
+    public static final String Table = "Table";
+    public static final String Chair = "Chair";
+    public static final String Lamp = "Lamp";
+
 
     private String title;
     private int image;

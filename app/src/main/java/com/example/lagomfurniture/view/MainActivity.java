@@ -1,5 +1,15 @@
 package com.example.lagomfurniture.view;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -12,16 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.lagomfurniture.R;
 import com.example.lagomfurniture.databinding.ActivityMainBinding;
 import com.example.lagomfurniture.model.Category;
@@ -29,12 +29,13 @@ import com.example.lagomfurniture.model.Product;
 import com.example.lagomfurniture.utils.SharedPreferencesUtils;
 import com.example.lagomfurniture.utils.adapter.MainCategoryRcAdapter;
 import com.example.lagomfurniture.utils.adapter.ProductListRcAdapter;
+import com.example.lagomfurniture.utils.interfaces.OnItemClickListener;
 import com.example.lagomfurniture.viewmodel.ProductViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MainCategoryRcAdapter.OnItemClickListener{
+public class MainActivity extends AppCompatActivity implements OnItemClickListener {
     private static final String TAG = "메인";
     private static final int SELECT_ON_VIEW = 2;
     private static final int SELECT_OFF_VIEW = 1;
@@ -55,40 +56,39 @@ public class MainActivity extends AppCompatActivity implements MainCategoryRcAda
         ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         viewInit();
-        CategoryRecyclerViewSetting();
+        categoryRecyclerViewSetting();
 
         getUserInfo();
         logout(logout);
 
 
-        //bind RecyclerView
+        // bind RecyclerView
         RecyclerView recyclerView = activityMainBinding.recyclerviewProduct;
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setHasFixedSize(true);
 
-        //bind data
+        // bind ViewModel
         productViewModel = ViewModelProviders.of(this).get(ProductViewModel.class);
         productListRcAdapter = new ProductListRcAdapter();
         recyclerView.setAdapter(productListRcAdapter);
+
         //메인화면은 클릭이벤트 없어도 bed로 받아와야 함
         getProductList("bed");
+        categoryState(SELECT_ON_VIEW, SELECT_OFF_VIEW, SELECT_OFF_VIEW, SELECT_OFF_VIEW, SELECT_OFF_VIEW);
     }
 
 
-    private void getProductList(String category) {
+    private void getProductList(String category) {  // 상품 리스트 서버에서 가져오기
         productViewModel.getProduct(category).observe(this, new Observer<List<Product>>() {
             @Override
             public void onChanged(List<Product> products) {
                 productListRcAdapter.setProductList((ArrayList<Product>) products);
-//                productSizeText.setText(products.size());
-//                int productListSize = products.size();
-                String productListSize = String.valueOf(products.size());
-                productSizeText.setText(productListSize);
+                productSizeText.setText(String.valueOf(products.size()));
             }
         });
     }
 
-    private void viewInit() {
+    private void viewInit() {   // 뷰 초기화
         Toolbar toolbar = findViewById(R.id.toolBar);
         drawerLayout = findViewById(R.id.drawerlayout);
         recyclerview_category = findViewById(R.id.recyclerview_category);
@@ -105,53 +105,54 @@ public class MainActivity extends AppCompatActivity implements MainCategoryRcAda
         }
     }
 
-    private void CategoryRecyclerViewSetting() {
-//        final List<Category> items = new ArrayList<>();
+    private void categoryRecyclerViewSetting() {    // 카테고리 항목 리사이클러뷰 세팅
+        items.add(new Category(Category.Bed, R.drawable.icon_bed, SELECT_ON_VIEW));
+        items.add(new Category(Category.Chest, R.drawable.icon_chest, SELECT_OFF_VIEW));
+        items.add(new Category(Category.Table, R.drawable.icon_table, SELECT_OFF_VIEW));
+        items.add(new Category(Category.Chair, R.drawable.icon_chair, SELECT_OFF_VIEW));
+        items.add(new Category(Category.Lamp, R.drawable.icon_lamp, SELECT_OFF_VIEW));
 
-        items.add(new Category("Bed", R.drawable.icon_bed, SELECT_ON_VIEW));
-        items.add(new Category("Chest", R.drawable.icon_chest, SELECT_OFF_VIEW));
-        items.add(new Category("Table", R.drawable.icon_table, SELECT_OFF_VIEW));
-        items.add(new Category("Chair", R.drawable.icon_chair, SELECT_OFF_VIEW));
-        items.add(new Category("Lamp", R.drawable.icon_lamp, SELECT_OFF_VIEW));
-
-        final MainCategoryRcAdapter adapter = new MainCategoryRcAdapter(items, MainActivity.this);
+        mainCategoryRcAdapter = new MainCategoryRcAdapter(items, MainActivity.this);
         LinearLayoutManager categoryLayoutManager = new LinearLayoutManager(MainActivity.this);
         categoryLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 
         recyclerview_category.setLayoutManager(categoryLayoutManager);
         recyclerview_category.setHasFixedSize(true);
-        recyclerview_category.setAdapter(adapter);
-        adapter.setOnItemClickListener(this);
+        recyclerview_category.setAdapter(mainCategoryRcAdapter);
+        mainCategoryRcAdapter.setOnItemClickListener(this);
+    }
+
+    private void categoryState(int bedState, int ChestState, int TableState, int ChairState, int LampState) {   // 카테고리 항목 리사이클러뷰 클릭시 뷰 상태 변경
+        items.set(0, new Category(Category.Bed, R.drawable.icon_bed, bedState));
+        items.set(1, new Category(Category.Chest, R.drawable.icon_chest, ChestState));
+        items.set(2, new Category(Category.Table, R.drawable.icon_table, TableState));
+        items.set(3, new Category(Category.Chair, R.drawable.icon_chair, ChairState));
+        items.set(4, new Category(Category.Lamp, R.drawable.icon_lamp, LampState));
     }
 
 
-    private void getUserInfo() {
+    private void getUserInfo() {    // 유저 이메일, 닉네임 가져오기
         Intent intent = getIntent();
-        if (intent != null) {
-            String userEmail = intent.getStringExtra("user_email");
-            String userNickname = intent.getStringExtra("nickname");
-            textView_userEmail.setText(userEmail);
-            textView_userNickname.setText(userNickname);
-        } else {
+        String userEmail = intent.getStringExtra("user_email");
+        String userNickname = intent.getStringExtra("nickname");
+        if (userEmail == null && userNickname == null) {
             SharedPreferencesUtils sharedPreferencesUtils = new SharedPreferencesUtils(MainActivity.this);
-            String userEmail = sharedPreferencesUtils.getStringSharedPreferences("user_email");
-            String userNickname = sharedPreferencesUtils.getStringSharedPreferences("nickname");
-            Log.v(TAG, "USER EMAIL : " + userEmail);
-            Log.v(TAG, "USER userNickname : " + userNickname);
-            textView_userEmail.setText(userEmail);
-            textView_userNickname.setText(userNickname);
+            userEmail = sharedPreferencesUtils.getStringSharedPreferences("user_email");
+            userNickname = sharedPreferencesUtils.getStringSharedPreferences("nickname");
         }
+        textView_userEmail.setText(userEmail);
+        textView_userNickname.setText(userNickname);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) { // Toolbar Menu
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.app_bar_menu, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {   // Toolbar Menu
         switch (item.getItemId()) {
             case R.id.shopping_basket:
                 Toast.makeText(this, "장바구니 클릭", Toast.LENGTH_SHORT).show();
@@ -187,25 +188,35 @@ public class MainActivity extends AppCompatActivity implements MainCategoryRcAda
     public void onItemClick(Category category, int position) {
         Log.v("item Clicked ", "" + category);
         switch (category.getTitle()) {
-            case "Bed":
+            case Category.Bed :
                 getProductList("bed");
-                Log.v("bed, position: ", position+"");
+                categoryState(SELECT_ON_VIEW, SELECT_OFF_VIEW, SELECT_OFF_VIEW, SELECT_OFF_VIEW, SELECT_OFF_VIEW);
+                mainCategoryRcAdapter.notifyDataSetChanged();
+                Log.v(TAG, "bed - position : " + position + "");
                 break;
-            case "Chest":
+            case Category.Chest:
                 getProductList("chest");
-                Log.v("chest,position: ", position+"");
+                categoryState(SELECT_OFF_VIEW, SELECT_ON_VIEW, SELECT_OFF_VIEW, SELECT_OFF_VIEW, SELECT_OFF_VIEW);
+                mainCategoryRcAdapter.notifyDataSetChanged();
+                Log.v(TAG, "chest - position : " + position + "");
                 break;
-            case "Table":
+            case Category.Table:
                 getProductList("table");
-                Log.v("table,position: ", position+"");
+                categoryState(SELECT_OFF_VIEW, SELECT_OFF_VIEW, SELECT_ON_VIEW, SELECT_OFF_VIEW, SELECT_OFF_VIEW);
+                mainCategoryRcAdapter.notifyDataSetChanged();
+                Log.v(TAG, "table - position : " + position + "");
                 break;
-            case "Chair" :
+            case Category.Chair:
                 getProductList("chair");
-                Log.v("chair,position: ", position+"");
+                categoryState(SELECT_OFF_VIEW, SELECT_OFF_VIEW, SELECT_OFF_VIEW, SELECT_ON_VIEW, SELECT_OFF_VIEW);
+                mainCategoryRcAdapter.notifyDataSetChanged();
+                Log.v(TAG, "chair - position : " + position + "");
                 break;
-            case "Lamp":
+            case Category.Lamp:
                 getProductList("lamp");
-                Log.v("lamp,position: ", position+"");
+                categoryState(SELECT_OFF_VIEW, SELECT_OFF_VIEW, SELECT_OFF_VIEW, SELECT_OFF_VIEW, SELECT_ON_VIEW);
+                mainCategoryRcAdapter.notifyDataSetChanged();
+                Log.v(TAG, "lamp - position : " + position + "");
                 break;
         }
     }

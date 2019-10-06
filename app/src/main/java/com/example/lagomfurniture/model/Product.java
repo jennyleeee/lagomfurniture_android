@@ -7,6 +7,7 @@ import androidx.databinding.BindingAdapter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.lagomfurniture.R;
+import com.example.lagomfurniture.utils.retrofit.RetrofitInit;
 import com.google.gson.annotations.SerializedName;
 
 
@@ -52,8 +53,7 @@ public class Product {
     }
 
     public String getProductThumbnail() {
-//        String host = "http://172.30.1.23:8080";
-        String host = "http://10.66.112.34:8080";
+        String host = RetrofitInit.BASE_URL;
         String path = "/static/img/product/";
         String category = getProductCategory();
         productThumbnail = host + path + category + "/" + productThumbnail;

@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.lagomfurniture.utils.LoginCallbacks;
+import com.example.lagomfurniture.utils.interfaces.LoginCallbacks;
 
 public class LoginViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 

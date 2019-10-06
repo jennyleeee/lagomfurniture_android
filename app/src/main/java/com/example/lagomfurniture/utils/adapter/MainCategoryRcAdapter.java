@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lagomfurniture.R;
 import com.example.lagomfurniture.model.Category;
+import com.example.lagomfurniture.utils.interfaces.OnItemClickListener;
 
 import java.util.List;
 
@@ -105,9 +106,7 @@ public class MainCategoryRcAdapter extends RecyclerView.Adapter<MainCategoryRcAd
             });
         }
     }
-    public interface OnItemClickListener{
-        void onItemClick(Category category,int position); //one item click
-    }
+
     public void setOnItemClickListener(OnItemClickListener listener){
         this.listener = listener;
     }

@@ -1,6 +1,5 @@
 package com.example.lagomfurniture.viewmodel;
 
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,7 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.lagomfurniture.model.User;
-import com.example.lagomfurniture.utils.LoginCallbacks;
+import com.example.lagomfurniture.utils.interfaces.LoginCallbacks;
 import com.example.lagomfurniture.utils.retrofit.RetrofitAPI;
 import com.example.lagomfurniture.utils.retrofit.RetrofitInit;
 
