@@ -45,4 +45,6 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel:2.2.0-alpha05'
     // circle imageview
     implementation 'de.hdodenhof:circleimageview:3.0.0'
+    // Kakao Login
+    implementation 'com.kakao.sdk:usermgmt:1.23.0'
 }
