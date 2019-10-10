@@ -10,4 +10,6 @@
     <color name="projectSub">#FFEACB</color>
     <color name="projectBackGround">#F3F3F3</color>
     <color name="projectCategoryColor">#FFCE7F</color>
+    <color name="kakaoColor">#FFEB00</color>
+    <color name="googleColor">#E72734</color>
 </resources>

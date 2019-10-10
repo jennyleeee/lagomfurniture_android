@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.example.lagomfurniture.R;
 import com.example.lagomfurniture.databinding.ActivityLoginBinding;
 import com.example.lagomfurniture.model.User;
-import com.example.lagomfurniture.utils.LoginCallbacks;
+import com.example.lagomfurniture.utils.interfaces.LoginCallbacks;
 import com.example.lagomfurniture.utils.SharedPreferencesUtils;
 import com.example.lagomfurniture.viewmodel.LoginViewModel;
 import com.example.lagomfurniture.viewmodel.LoginViewModelFactory;
