@@ -3,4 +3,5 @@
     <string name="splash_text">Lagom Furniture &amp; Decor \nForYour Home</string>
     <string name="naviagion_open">naviagion_open</string>
     <string name="naviagion_close">naviagion_close</string>
+    <string name="kakao_app_key">0000</string>
 </resources>
